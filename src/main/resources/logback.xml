@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- 定义日志输出格式 -->
+	<property resource="log.properties" />
+	<property name="LOG_PATTERN"
+		value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36}[%line] %msg%n" />
+
+	<!-- 输出到滚动文件 -->
+	<appender name="timespend"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 文件名 -->
+		<File>${log_root}/timespend.log</File>
+		<!-- 配置基于时间的滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 滚动时间周期是从fileNamePattern推断出来的 -->
+			<!-- 比如格式：{yyyy-MM-dd}表示按天滚动；{yyyy-MM-dd_HH}表示按小时滚动 -->
+			<fileNamePattern>${log_root}/timespend.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 保留历史日志数量 -->
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+			<immediateFlush>true</immediateFlush>
+		</encoder>
+	</appender>
+
+	<appender name="ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 文件名 -->
+		<File>${log_root}/error.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<!-- 配置基于时间的滚动策略 -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 滚动时间周期是从fileNamePattern推断出来的 -->
+			<!-- 比如格式：{yyyy-MM-dd}表示按天滚动；{yyyy-MM-dd_HH}表示按小时滚动 -->
+			<fileNamePattern>${log_root}/error.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<!-- 保留历史日志数量 -->
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+			<immediateFlush>true</immediateFlush>
+		</encoder>
+	</appender>
+
+	<appender name="DEBUG_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log_root}/debug.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_root}/debug.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+			<immediateFlush>true</immediateFlush>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+	      <level>DEBUG</level>
+	      <onMatch>ACCEPT</onMatch>
+	      <onMismatch>DENY</onMismatch>
+   		</filter>
+	</appender>
+	
+	
+	<appender name="INFO_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log_root}/info.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_root}/info.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+			<immediateFlush>true</immediateFlush>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+	      <level>INFO</level>
+	      <onMatch>ACCEPT</onMatch>
+	      <onMismatch>DENY</onMismatch>
+   		</filter>
+	</appender>
+	
+	<appender name="TOTAL_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log_root}/total.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_root}/total.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+			<immediateFlush>true</immediateFlush>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>INFO</level>
+   		</filter>
+	</appender>
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+	<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>INFO</level>
+   		</filter>
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 特定日志使用指定的appender -->
+	<logger name="com.qywenji.image.commons.interceptor.LoggingInterceptor"
+		additivity="false" level="INFO">
+		<appender-ref ref="timespend" />
+	</logger>
+
+	<logger name="com.qywenji.image.commons.interceptor.GlobalExceptionHandler" level="error"
+		additivity="false">
+		<appender-ref ref="ERROR" />
+	</logger>
+
+	<root level="debug">
+		 <appender-ref ref="CONSOLE" />  
+		<appender-ref ref="ERROR" level="ERROR" />
+		<appender-ref ref="INFO_FILE" level="INFO" />
+		<appender-ref ref="DEBUG_FILE" level="DEBUG" />
+		<appender-ref ref="TOTAL_FILE" />
+	</root>
+
+</configuration>
